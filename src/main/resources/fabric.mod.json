@@ -1,38 +1,36 @@
 {
-	"schemaVersion": 1,
-	"id": "blend",
-	"version": "${version}",
-	"name": "blend",
-	"description": "This is an example description! Tell everyone what your mod is about!",
-	"authors": [
-		"Me!"
-	],
-	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
-	},
-	"license": "CC0-1.0",
-	"icon": "assets/blend/icon.png",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-			{
-				"value": "blend.Blend",
-				"adapter": "kotlin"
-			}
-		]
-	},
-	"mixins": [
-		"blend.mixins.json"
-	],
-	"depends": {
-		"fabricloader": ">=0.16.10",
-		"minecraft": "~1.21.4",
-		"java": ">=21",
-		"fabric-api": "*",
-		"fabric-language-kotlin": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
-	}
+    "schemaVersion": 1,
+    "id": "blend",
+    "version": "${version}",
+    "name": "blend",
+    "description": "The 'Blend' client using the Fabric Mod Loader",
+    "authors": [
+        "inlinefun"
+    ],
+    "contact": {
+        "sources": "https://github.com/inlinefun/blend"
+    },
+    "license": "GPL-3.0",
+    "icon": "assets/blend/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "client": [
+            {
+                "value": "blend.Initializer",
+                "adapter": "kotlin"
+            }
+        ]
+    },
+    "mixins": [
+        "blend.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=${loader_version}",
+        "minecraft": "~${minecraft_version}",
+        "java": ">=21",
+        "fabric-language-kotlin": ">=${fabric_kotlin_version}"
+    },
+    "suggests": {
+        "another-mod": "*"
+    }
 }
