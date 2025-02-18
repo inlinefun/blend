@@ -1,6 +1,7 @@
 package blend.mixin.minecraft;
 
 import blend.Client;
+import blend.util.render.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,14 +19,14 @@ public class MinecraftClientMixin {
             )
     )
     private void initializeNanoVG(RunArgs args, CallbackInfo ci) {
-
+        DrawUtil.init();
     }
 
     @Inject(
             method = "stop",
             at = @At(
-                    value = "INVOKE",
-                    target = "Lorg/slf4j/Logger;info(Ljava/lang/String;)V")
+                    value = "HEAD"
+            )
     )
     private void shutdown(CallbackInfo ci) {
         Client.INSTANCE.shutdown();

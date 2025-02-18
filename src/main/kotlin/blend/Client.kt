@@ -1,5 +1,8 @@
 package blend
 
+import blend.handler.Handlers
+import blend.module.ModuleManager
+import blend.util.render.DrawUtil
 import org.slf4j.LoggerFactory
 
 object Client {
@@ -11,11 +14,14 @@ object Client {
     fun init() {
         val preInitTime = System.currentTimeMillis()
 
+        ModuleManager.init()
+        Handlers.init()
+
         logger.info("Initialized $name v$version in ${System.currentTimeMillis() - preInitTime}ms")
     }
 
     fun shutdown() {
-
+        DrawUtil.destroy()
     }
 
 }
