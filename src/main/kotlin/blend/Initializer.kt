@@ -2,8 +2,8 @@ package blend
 
 import net.fabricmc.api.ClientModInitializer
 
-object Initializer: ClientModInitializer {
-	override fun onInitializeClient() {
-
-	}
+class Initializer: ClientModInitializer {
+    override fun onInitializeClient() {
+        Client.init()
+    }
 }
