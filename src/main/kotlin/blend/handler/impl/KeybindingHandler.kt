@@ -10,8 +10,12 @@ object KeybindingHandler: IHandler {
 
     @Subscribe
     fun onKeyEvent(event: KeyEvent) {
+        if (mc.currentScreen != null)
+            return
         ModuleManager.modules
             .filter { module ->
+                module.bind.get() == event.key
+                &&
                 if (module.bind.hold)
                     event.action == GLFW.GLFW_RELEASE
                 else
