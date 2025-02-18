@@ -7,14 +7,20 @@ object EventBus: IAccessor {
 
     private val bus = EventBus
         .builder()
-        .throwSubscriberException(false)
-        .logSubscriberExceptions(true)
-        .strictMethodVerification(true)
+        .apply {
+            logSubscriberExceptions(true)
+            logNoSubscriberMessages(false)
+            sendSubscriberExceptionEvent(false)
+            sendNoSubscriberEvent(false)
+            throwSubscriberException(false)
+        }
         .build()!!
 
     fun register(subscriber: Subscriber) {
-        if (bus.hasSubscriberForEvent(Event::class.java))
+        try {
             bus.register(subscriber)
+        } catch (_: Exception) {
+        }
     }
 
     fun unregister(subscriber: Subscriber) {
