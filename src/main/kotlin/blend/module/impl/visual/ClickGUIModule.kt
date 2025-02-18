@@ -2,6 +2,7 @@ package blend.module.impl.visual
 
 import blend.module.AbstractModule
 import blend.module.ModuleCategory
+import blend.ui.clickgui.FlatClickGUI
 import org.lwjgl.glfw.GLFW
 
 object ClickGUIModule: AbstractModule(
@@ -12,7 +13,7 @@ object ClickGUIModule: AbstractModule(
 ) {
 
     override fun onEnable() {
-
+        mc.setScreen(FlatClickGUI)
     }
 
     override fun onDisable() {

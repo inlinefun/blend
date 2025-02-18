@@ -11,7 +11,8 @@ object ModuleManager {
     fun init() {
         modules = listOf(
             ClickGUIModule,
-            SprintModule
+            SprintModule,
+            ClientThemeModule
         ).sortedBy { it.name }.also { modules ->
             modules.filter { it.defaultEnabled }.forEach{ it.set(true) }
         }
