@@ -1,5 +1,6 @@
 package blend
 
+import blend.command.CommandManager
 import blend.handler.Handlers
 import blend.module.ModuleManager
 import blend.util.render.DrawUtil
@@ -15,6 +16,7 @@ object Client {
         val preInitTime = System.currentTimeMillis()
 
         ModuleManager.init()
+        CommandManager.init()
         Handlers.init()
 
         logger.info("Initialized $name v$version in ${System.currentTimeMillis() - preInitTime}ms")

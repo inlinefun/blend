@@ -16,3 +16,6 @@ data class KeyEvent(
     val modifiers: Int
 ): Event
 
+data class ChatSendEvent(
+    var message: String
+): CancellableEvent()
