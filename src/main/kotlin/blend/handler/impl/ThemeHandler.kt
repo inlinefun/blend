@@ -11,7 +11,7 @@ object ThemeHandler: IHandler {
     val primary get() = ClientThemeModule.accent
     val secondary get() = ClientThemeModule.secondary
     val fontName get() = ClientThemeModule.fontFace.lowercase()
-    val staticBackground get() = Color(8, 9, 10)
+    val staticBackground get() = Color(0, 0, 0)
     val textColor get() = background().textColor
 
     fun background(ratio: Double = 0.10): Color {
