@@ -1,191 +1,109 @@
 package blend.util.render
 
-import blend.handler.impl.ThemeHandler
-import blend.util.alignment.Alignment
 import blend.util.interfaces.IAccessor
-import blend.util.misc.MiscUtil
 import com.mojang.blaze3d.systems.RenderSystem
-import org.lwjgl.nanovg.NVGColor
-import org.lwjgl.nanovg.NanoVG.*
-import org.lwjgl.nanovg.NanoVGGL3.*
+import net.minecraft.client.render.BufferRenderer
+import org.jetbrains.skia.*
+import org.jetbrains.skia.Canvas.SaveLayerRec
 import org.lwjgl.opengl.GL33
 import org.lwjgl.system.MemoryStack
-import java.awt.Color
-import java.nio.ByteBuffer
+import javax.swing.Spring.height
+
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 object DrawUtil: IAccessor {
 
-    private var context = -1L
-    private lateinit var poppins: ByteBuffer
-    private lateinit var lato: ByteBuffer
+    private lateinit var context: DirectContext
+    private lateinit var target: BackendRenderTarget
+    private lateinit var surface: Surface
+    val canvas get() = surface.canvas
 
     @JvmStatic
     fun init() {
-        context = nvgCreate(NVG_ANTIALIAS or NVG_STENCIL_STROKES)
-        if (context == -1L) {
-            throw IllegalStateException("DrawUtil: NanoVG context is invalid")
-        }
-        poppins = MiscUtil.getResourceAsByteBuffer("fonts/poppins.ttf")
-        lato = MiscUtil.getResourceAsByteBuffer("fonts/lato.ttf")
-        nvgCreateFontMem(context, "poppins", poppins, false)
-        nvgCreateFontMem(context, "lato", lato, false)
+        context = DirectContext.makeGL()
+        updateSurface()
+    }
+
+    @JvmStatic
+    fun updateSurface() {
+        if (this::surface.isInitialized)
+            surface.close()
+        if (this::target.isInitialized)
+            target.close()
+
+        target = BackendRenderTarget.makeGL(
+            width = mc.window.width,
+            height = mc.window.height,
+            sampleCnt = 0,
+            stencilBits = 8,
+            fbId = mc.framebuffer.fbo,
+            fbFormat = FramebufferFormat.GR_GL_RGBA8
+        )
+        surface = Surface.makeFromBackendRenderTarget(
+            context = context,
+            rt = target,
+            origin = SurfaceOrigin.BOTTOM_LEFT,
+            colorFormat = SurfaceColorFormat.RGBA_8888,
+            colorSpace = ColorSpace.sRGB
+        )!!
     }
 
     @JvmStatic
     fun destroy() {
-        if (context != -1L) {
-            nvgDelete(context)
-        }
+        surface.close()
+        target.close()
+        context.close()
     }
 
-    fun render(fr: (DrawUtil) -> Unit) {
+    fun renderTest() {
         MemoryStack.stackPush().use { _ ->
-            preRender()
-            begin()
-            scale {
-                fr(this)
+            
+            RenderSystem.pixelStore(GL33.GL_UNPACK_ROW_LENGTH, 0)
+            RenderSystem.pixelStore(GL33.GL_UNPACK_SKIP_PIXELS, 0)
+            RenderSystem.pixelStore(GL33.GL_UNPACK_SKIP_ROWS, 0)
+            RenderSystem.pixelStore(GL33.GL_UNPACK_ALIGNMENT, 4)
+            
+            context.resetGLAll()
+
+            val snapshot = surface.makeImageSnapshot()
+            Paint().apply {
+                isAntiAlias = true
+                imageFilter = ImageFilter.makeBlur(10f, 10f, FilterTileMode.CLAMP)
+                blendMode = BlendMode.SRC
+            }.use { paint ->
+                canvas.drawImage(snapshot, 0f, 0f, paint)
             }
-            end()
-            postRender()
+
+            Paint()
+                .apply {
+                    isAntiAlias = true
+                    setARGB(150, 255, 255, 255)
+                }.use { paint ->
+                    canvas.drawRRect(RRect.makeXYWH(50f, 50f, 100f, 50f, 5f), paint)
+                }
+
+            context.flush(surface)
+            BufferRenderer.reset()
+            GL33.glBindSampler(0, 0)
+            RenderSystem.disableBlend()
+            GL33.glDisable(GL33.GL_BLEND)
+            RenderSystem.blendFunc(GL33.GL_SRC_ALPHA, GL33.GL_ONE)
+            GL33.glBlendFunc(GL33.GL_SRC_ALPHA, GL33.GL_ONE)
+            RenderSystem.blendEquation(GL33.GL_FUNC_ADD)
+            GL33.glBlendEquation(GL33.GL_FUNC_ADD)
+            RenderSystem.colorMask(true, true, true, true)
+            GL33.glColorMask(true, true, true, true)
+            RenderSystem.depthMask(true)
+            GL33.glDepthMask(true)
+            RenderSystem.disableScissor()
+            GL33.glDisable(GL33.GL_SCISSOR_TEST)
+            GL33.glDisable(GL33.GL_STENCIL_TEST)
+            RenderSystem.disableDepthTest()
+            GL33.glDisable(GL33.GL_DEPTH_TEST)
+            GL33.glActiveTexture(GL33.GL_TEXTURE0)
+            RenderSystem.activeTexture(GL33.GL_TEXTURE0)
+            RenderSystem.disableCull()
         }
     }
 
-    fun savedState(fr: () -> Unit) {
-        save()
-        fr()
-        restore()
-    }
-    fun scale(scale: Number = mc.window.scaleFactor, fr: () -> Unit) {
-        save()
-        scale(scale)
-        fr()
-        restore()
-    }
-    fun translate(x: Number, y: Number, fr: () -> Unit) {
-        save()
-        translate(x, y)
-        fr()
-        restore()
-    }
-    fun scissor(x: Number, y: Number, width: Number, height: Number, fr: () -> Unit) {
-        savedState {
-            scissor(x, y, width, height)
-            fr()
-            resetScissor()
-        }
-    }
-
-    fun save() = nvgSave(context)
-    fun restore() = nvgRestore(context)
-    fun scale() = scale(mc.window.scaleFactor)
-    fun scale(scale: Number) = scale(scale, scale)
-    fun scale(x: Number, y: Number) = nvgScale(context, x.toFloat(), y.toFloat())
-    fun translate(x: Number, y: Number) = nvgTranslate(context, x.toFloat(), y.toFloat())
-    fun scissor(x: Number, y: Number, width: Number, height: Number) = nvgScissor(context, x.toFloat(), y.toFloat(), width.toFloat(), height.toFloat())
-    fun resetScissor() = nvgResetScissor(context)
-    private fun begin() = nvgBeginFrame(context, mc.window.width.toFloat(), mc.window.height.toFloat(), 1.0f)
-    private fun end() = nvgEndFrame(context)
-
-    fun rect(x: Number, y: Number, width: Number, height: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
-        path {
-            color.nvgColor { nvgColor ->
-                val position = alignment.getPosition(width.toFloat(), height.toFloat())(x.toFloat(), y.toFloat())
-                nvgRect(context, position.first, position.second, width.toFloat(), height.toFloat())
-                nvgFillColor(context, nvgColor)
-                nvgFill(context)
-            }
-        }
-    }
-    fun outlinedRect(x: Number, y: Number, width: Number, height: Number, stroke: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
-        path {
-            color.nvgColor { nvgColor ->
-                val position = alignment.getPosition(width.toFloat(), height.toFloat())(x.toFloat(), y.toFloat())
-                nvgRect(context, position.first, position.second, width.toFloat(), height.toFloat())
-                nvgStrokeWidth(context, stroke.toFloat())
-                nvgStrokeColor(context, nvgColor)
-                nvgStroke(context)
-            }
-        }
-    }
-    fun roundedRect(x: Number, y: Number, width: Number, height: Number, cornerRadius: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
-        path {
-            color.nvgColor { nvgColor ->
-                val position = alignment.getPosition(width.toFloat(), height.toFloat())(x.toFloat(), y.toFloat())
-                nvgRoundedRect(context, position.first, position.second, width.toFloat(), height.toFloat(), cornerRadius.toFloat())
-                nvgFillColor(context, nvgColor)
-                nvgFill(context)
-            }
-        }
-    }
-    fun outlinedRoundedRect(x: Number, y: Number, width: Number, height: Number, cornerRadius: Number, stroke: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
-        path {
-            color.nvgColor { nvgColor ->
-                val position = alignment.getPosition(width.toFloat(), height.toFloat())(x.toFloat(), y.toFloat())
-                nvgRoundedRect(context, position.first, position.second, width.toFloat(), height.toFloat(), cornerRadius.toFloat())
-                nvgStrokeWidth(context, stroke.toFloat())
-                nvgStrokeColor(context, nvgColor)
-                nvgStroke(context)
-            }
-        }
-    }
-
-    /**
-     * @return Pair of string width and height
-     */
-    fun string(text: String, x: Number, y: Number, fontSize: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT, fontName: String = ThemeHandler.fontName): Pair<Double, Double> {
-        val bounds = FloatArray(4)
-        path {
-            // shadow first
-            Color(0, 0, 0, 160).nvgColor { nvgColor ->
-                nvgFillColor(context, nvgColor)
-            }
-            nvgFontFace(context, fontName)
-            nvgFontBlur(context, 2.0f)
-            nvgFontSize(context, fontSize.toFloat())
-            nvgTextAlign(context, alignment.getFontAlignmentFlags())
-            nvgText(context, x.toFloat() + 2.0f, y.toFloat() + 2.0f, text)
-
-            color.nvgColor { nvgColor ->
-                nvgFillColor(context, nvgColor)
-            }
-            nvgFontFace(context, fontName)
-            nvgFontBlur(context, 0.0f)
-            nvgFontSize(context, fontSize.toFloat())
-            nvgTextAlign(context, alignment.getFontAlignmentFlags())
-            nvgTextBounds(context, x.toFloat(), y.toFloat(), text, bounds)
-            nvgText(context, x.toFloat(), y.toFloat(), text)
-        }
-        return bounds[2].toDouble() - bounds[0].toDouble() to bounds[3].toDouble() - bounds[1].toDouble()
-    }
-
-    private fun preRender() {
-        RenderSystem.enableBlend()
-        RenderSystem.defaultBlendFunc()
-        RenderSystem.disableDepthTest()
-    }
-    private fun postRender() {
-        RenderSystem.disableCull()
-        RenderSystem.enableDepthTest()
-        RenderSystem.disableBlend()
-
-        RenderSystem.activeTexture(GL33.GL_TEXTURE0)
-        RenderSystem.bindTexture(0)
-    }
-    private inline fun path(fr: () -> Unit) {
-        nvgBeginPath(context)
-        fr()
-        nvgClosePath(context)
-    }
-    private inline fun Color.nvgColor(stuffWithTheNvgColor: (NVGColor) -> Unit) {
-        NVGColor
-            .malloc()
-            .r((red / 255f).coerceIn(0f, 1f))
-            .g((green / 255f).coerceIn(0f, 1f))
-            .b((blue / 255f).coerceIn(0f, 1f))
-            .a((alpha / 255f).coerceIn(0f, 1f))
-            .use { nvgColor ->
-                stuffWithTheNvgColor(nvgColor)
-            }
-    }
 }

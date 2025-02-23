@@ -1,8 +1,5 @@
 package blend.util.alignment
 
-import org.lwjgl.nanovg.NanoVG
-
-
 enum class Alignment {
     TOP_LEFT,
     TOP_CENTER,
@@ -34,22 +31,6 @@ enum class Alignment {
                 BOTTOM_CENTER -> (x - (width / 2)) to (y - height)
                 BOTTOM_RIGHT -> (x - width) to (y - height)
             }
-        }
-    }
-
-    fun getFontAlignmentFlags(): Int {
-        return when (this) {
-            TOP_LEFT -> NanoVG.NVG_ALIGN_TOP or NanoVG.NVG_ALIGN_LEFT
-            TOP_CENTER -> NanoVG.NVG_ALIGN_TOP or NanoVG.NVG_ALIGN_CENTER
-            TOP_RIGHT -> NanoVG.NVG_ALIGN_TOP or NanoVG.NVG_ALIGN_RIGHT
-
-            CENTER_LEFT -> NanoVG.NVG_ALIGN_MIDDLE or NanoVG.NVG_ALIGN_LEFT
-            CENTER -> NanoVG.NVG_ALIGN_MIDDLE or NanoVG.NVG_ALIGN_CENTER
-            CENTER_RIGHT -> NanoVG.NVG_ALIGN_MIDDLE or NanoVG.NVG_ALIGN_RIGHT
-
-            BOTTOM_LEFT -> NanoVG.NVG_ALIGN_BOTTOM or NanoVG.NVG_ALIGN_LEFT
-            BOTTOM_CENTER -> NanoVG.NVG_ALIGN_BOTTOM or NanoVG.NVG_ALIGN_CENTER
-            BOTTOM_RIGHT -> NanoVG.NVG_ALIGN_BOTTOM or NanoVG.NVG_ALIGN_RIGHT
         }
     }
 

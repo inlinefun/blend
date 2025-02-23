@@ -1,13 +1,14 @@
 {
-    "required": true,
-    "package": "blend.mixin",
-    "compatibilityLevel": "JAVA_21",
-    "injectors": {
-        "defaultRequire": 1
-    },
-    "client": [
-        "minecraft.KeyboardMixin",
-        "minecraft.MinecraftClientMixin",
-        "minecraft.gui.screen.ChatScreenMixin"
-    ]
+  "required": true,
+  "package": "blend.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "minecraft.KeyboardMixin",
+    "minecraft.MinecraftClientMixin",
+    "minecraft.gui.screen.ChatScreenMixin",
+    "minecraft.util.WindowMixin"
+  ]
 }

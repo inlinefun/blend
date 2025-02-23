@@ -10,6 +10,9 @@ group = project.group
 
 repositories {
     mavenCentral()
+    maven {
+        url = "https://maven.pkg.jetbrains.space/public/p/compose/dev"
+    }
 }
 
 dependencies {
@@ -20,9 +23,9 @@ dependencies {
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
     include implementation("org.greenrobot:eventbus-java:3.3.1")
-    include implementation("org.lwjgl:lwjgl-nanovg:3.3.3")
-    ["windows", "linux"].forEach {platform ->
-        include implementation("org.lwjgl:lwjgl-nanovg::natives-$platform")
+    include implementation("org.jetbrains.skiko:skiko-awt:${project.skiko_version}")
+    ["windows-x64", "linux-x64"].forEach {platform ->
+        include implementation("org.jetbrains.skiko:skiko-awt-runtime-$platform:${project.skiko_version}")
     }
 
 }
