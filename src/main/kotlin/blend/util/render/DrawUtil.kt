@@ -75,6 +75,12 @@ object DrawUtil: IAccessor {
             resetScissor()
         }
     }
+    fun intersectScissor(x: Number, y: Number, width: Number, height: Number, fr: () -> Unit) {
+        savedState {
+            intersectScissor(x, y, width, height)
+            fr()
+        }
+    }
 
     fun save() = nvgSave(context)
     fun restore() = nvgRestore(context)
@@ -83,6 +89,7 @@ object DrawUtil: IAccessor {
     fun scale(x: Number, y: Number) = nvgScale(context, x.toFloat(), y.toFloat())
     fun translate(x: Number, y: Number) = nvgTranslate(context, x.toFloat(), y.toFloat())
     fun scissor(x: Number, y: Number, width: Number, height: Number) = nvgScissor(context, x.toFloat(), y.toFloat(), width.toFloat(), height.toFloat())
+    fun intersectScissor(x: Number, y: Number, width: Number, height: Number) = nvgIntersectScissor(context, x.toFloat(), y.toFloat(), width.toFloat(), height.toFloat())
     fun resetScissor() = nvgResetScissor(context)
     private fun begin() = nvgBeginFrame(context, mc.window.width.toFloat(), mc.window.height.toFloat(), 1.0f)
     private fun end() = nvgEndFrame(context)
