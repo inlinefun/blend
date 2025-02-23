@@ -1,11 +1,13 @@
 package blend.ui
 
+import blend.util.interfaces.IScreen
+
 abstract class AbstractUIComponent(
-    var x: Double = 0.0,
-    var y: Double = 0.0,
-    var width: Double = 0.0,
-    var height: Double = 0.0
-) {
+    open var x: Double = 0.0,
+    open var y: Double = 0.0,
+    open var width: Double = 0.0,
+    open var height: Double = 0.0
+): IScreen {
     fun position(x: Double, y: Double) {
         this.x = x
         this.y = y
