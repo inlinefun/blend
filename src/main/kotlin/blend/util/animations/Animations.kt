@@ -14,6 +14,7 @@ abstract class AbstractAnimation<T>(
     protected abstract var targetValue: T
     var finished = false
 
+    val animating get() = currentValue != targetValue
     val progress get() = ((System.currentTimeMillis() - startTime).toDouble() / duration.toDouble()).coerceIn(0.0, 1.0)
 
     abstract fun animate(targetValue: T)
@@ -25,8 +26,8 @@ abstract class AbstractAnimation<T>(
     }
 
     fun get() = currentValue
-    fun set(targetValue: T) {
-        this.targetValue = targetValue
+    fun set(currentValue: T) {
+        this.currentValue = currentValue
     }
 
 }
@@ -40,7 +41,7 @@ class Animation(
 
     override var initialValue = 0.0
     override var currentValue = 0.0
-    override var targetValue = 0.0
+    public override var targetValue = 0.0
 
     override fun animate(targetValue: Double) {
         currentTime = System.currentTimeMillis()

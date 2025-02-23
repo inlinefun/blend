@@ -12,5 +12,13 @@ object ColorUtil {
     fun Color.alpha(alpha: Float): Color {
         return Color(this.red, this.green, this.blue, (alpha / 255f).toInt().coerceIn(0, 255))
     }
+    fun Color.darkerBy(factor: Double): Color {
+        return Color(
+            (this.red * factor.coerceIn(0.0, 1.0)).toInt().coerceIn(0, 255),
+            (this.green * factor.coerceIn(0.0, 1.0)).toInt().coerceIn(0, 255),
+            (this.blue * factor.coerceIn(0.0, 1.0)).toInt().coerceIn(0, 255),
+            this.alpha
+        )
+    }
 
 }
