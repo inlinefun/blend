@@ -1,0 +1,55 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+	id 'fabric-loom' version '1.10-SNAPSHOT'
+	id "org.jetbrains.kotlin.jvm" version "2.1.10"
+}
+
+version = "5.0"
+group = "blend"
+
+repositories {
+	mavenCentral()
+	maven {
+		url = "https://jitpack.io"
+	}
+}
+
+dependencies {
+	minecraft("net.minecraft:minecraft:${project.minecraft_version}")
+	mappings("net.fabricmc:yarn:${project.yarn_mappings}:v2")
+	modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
+	modImplementation("net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}")
+
+	include implementation("org.lwjgl:lwjgl-nanovg:3.3.3")
+	["windows", "linux", "macos"].forEach { platform ->
+		include implementation("org.lwjgl:lwjgl-nanovg::natives-$platform")
+	}
+
+}
+
+processResources {
+	filesMatching("fabric.mod.json") {
+		expand([
+				"version": project.version,
+				"minecraft_version": project.property("minecraft_version"),
+				"loader_version": project.property("loader_version"),
+				"fabric_kotlin_version": project.property("fabric_kotlin_version")
+		])
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+}
+
+tasks.withType(KotlinCompile).configureEach {
+	kotlinOptions {
+		jvmTarget = 21
+	}
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
