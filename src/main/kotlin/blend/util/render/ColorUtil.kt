@@ -9,8 +9,11 @@ object ColorUtil {
     fun Color.alpha(alpha: Int): Color {
         return Color(this.red, this.green, this.blue, alpha.coerceIn(0, 255))
     }
+    fun Color.alpha(alpha: Double): Color {
+        return Color(this.red, this.green, this.blue, (255 / alpha).toInt().coerceIn(0, 255))
+    }
     fun Color.alpha(alpha: Float): Color {
-        return Color(this.red, this.green, this.blue, (alpha / 255f).toInt().coerceIn(0, 255))
+        return Color(this.red, this.green, this.blue, (255 / alpha).toInt().coerceIn(0, 255))
     }
     fun Color.darkerBy(factor: Double): Color {
         return Color(
