@@ -2,8 +2,7 @@ package blend.util.render
 
 import blend.util.render.DrawUtil.nvgColor
 import org.lwjgl.nanovg.NVGPaint
-import org.lwjgl.nanovg.NanoVG.nvgLinearGradient
-import org.lwjgl.nanovg.NanoVG.nvgRadialGradient
+import org.lwjgl.nanovg.NanoVG.*
 import java.awt.Color
 
 sealed interface Gradient {
@@ -28,6 +27,7 @@ data class LinearGradient(
                             first, second,
                             paint
                         )
+                        stuffWithNVGPaint(paint)
                     }
                 }
             }
@@ -52,6 +52,7 @@ data class RadialGradient(
                             first, second,
                             paint
                         )
+                        stuffWithNVGPaint(paint)
                     }
                 }
             }
