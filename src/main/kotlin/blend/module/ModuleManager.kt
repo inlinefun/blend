@@ -54,7 +54,8 @@ object ModuleManager: Initializable {
         return obj
     }
     private fun AbstractModule.useJsonObject(obj: JsonObject) {
-        set(obj.get("state").asBoolean)
+        if (this !is ClickGUIModule)
+            set(obj.get("state").asBoolean)
         obj.get("values").asJsonArray.map {
             it.asJsonObject
         }.forEach { obj ->

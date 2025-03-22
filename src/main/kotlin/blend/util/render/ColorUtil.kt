@@ -23,5 +23,12 @@ object ColorUtil {
             this.alpha
         )
     }
+    fun mixColors(primary: Color, secondary: Color, factor: Double): Color {
+        val otherFactor = 1.0 - factor
+        val redFactor = (primary.red * otherFactor + secondary.red * factor).toInt().coerceIn(0, 255)
+        val greenFactor = (primary.green * otherFactor + secondary.green * factor).toInt().coerceIn(0, 255)
+        val blueFactor = (primary.blue * otherFactor + secondary.blue * factor).toInt().coerceIn(0, 255)
+        return Color(redFactor, greenFactor, blueFactor)
+    }
 
 }

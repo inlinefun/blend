@@ -34,7 +34,7 @@ abstract class AbstractAnimation<T>(
 
 class Animation(
     easing: (Double) -> Double,
-    duration: Number
+    duration: Number = 150.0
 ): AbstractAnimation<Double>(
     easing, duration
 ) {

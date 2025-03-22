@@ -15,6 +15,5 @@ object ClientThemeModule: AbstractModule(
     val secondary by color("Secondary", Color(160, 0, 255))
     val tint by boolean("Tint", true)
     val fontFace by list("Font face", arrayOf("Poppins", "Lato"))
-    val gradientSpeed by int("Gradient speed", 1000, 500, 2500)
 
 }

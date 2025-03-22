@@ -132,7 +132,22 @@ class ListValue(
             loadError()
         super.set(newValue)
     }
-
+    fun next() {
+        val index = availableOptions.indexOf(get())
+        if (index < availableOptions.size - 1) {
+            set(availableOptions[index + 1])
+        } else {
+            set(availableOptions.first())
+        }
+    }
+    fun previous() {
+        val index = availableOptions.indexOf(get())
+        if (index > 0) {
+            set(availableOptions[index - 1])
+        } else {
+            set(availableOptions.last())
+        }
+    }
     override fun getJsonObject(): JsonObject {
         val obj = JsonObject()
         obj.addProperty("name", name)

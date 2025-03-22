@@ -19,4 +19,7 @@ abstract class AbstractUIComponent(
     fun isOver(mouseX: Double, mouseY: Double): Boolean {
         return mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height
     }
+    fun isOver(x: Double, y: Double, width: Double, height: Double, mouseX: Double, mouseY: Double): Boolean {
+        return mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height
+    }
 }

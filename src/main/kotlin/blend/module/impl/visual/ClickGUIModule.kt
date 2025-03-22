@@ -2,7 +2,7 @@ package blend.module.impl.visual
 
 import blend.module.AbstractModule
 import blend.module.ModuleCategory
-import blend.ui.click.PanelGUI
+import blend.ui.click.DropdownGUI
 import org.lwjgl.glfw.GLFW
 
 object ClickGUIModule: AbstractModule(
@@ -12,7 +12,7 @@ object ClickGUIModule: AbstractModule(
     defaultKey = GLFW.GLFW_KEY_RIGHT_SHIFT
 ) {
 
-    override fun onEnable() = mc.setScreen(PanelGUI)
+    override fun onEnable() = mc.setScreen(DropdownGUI)
     override fun onDisable() = mc.setScreen(null)
 
 }

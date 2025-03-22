@@ -155,6 +155,32 @@ object DrawUtil: IAccessor {
             nvgFill(context)
         }
     }
+    fun roundedRect(x: Number, y: Number, width: Number, height: Number, cornerRadius: DoubleArray, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
+        require(cornerRadius.size == 4) {
+            throw IllegalArgumentException("Provided array size isn't 4")
+        }
+        path {
+            color.nvgColor { nvgColor ->
+                val position = alignment.getPosition(width.toFloat(), height.toFloat())(x.toFloat(), y.toFloat())
+                nvgRoundedRectVarying(context, position.first, position.second, width.toFloat(), height.toFloat(), cornerRadius[0].toFloat(), cornerRadius[1].toFloat(), cornerRadius[2].toFloat(), cornerRadius[3].toFloat())
+                nvgFillColor(context, nvgColor)
+                nvgFill(context)
+            }
+        }
+    }
+    fun roundedRect(x: Number, y: Number, width: Number, height: Number, cornerRadius: DoubleArray, gradient: Gradient, alignment: Alignment = Alignment.TOP_LEFT) {
+        require(cornerRadius.size == 4) {
+            throw IllegalArgumentException("Provided array size isn't 4")
+        }
+        path {
+            val position = alignment.getPosition(width.toFloat(), height.toFloat())(x.toFloat(), y.toFloat())
+            nvgRoundedRectVarying(context, position.first, position.second, width.toFloat(), height.toFloat(), cornerRadius[0].toFloat(), cornerRadius[1].toFloat(), cornerRadius[2].toFloat(), cornerRadius[3].toFloat())
+            gradient.withPaint(context) { paint ->
+                nvgFillPaint(context, paint)
+            }
+            nvgFill(context)
+        }
+    }
     fun outlinedRoundedRect(x: Number, y: Number, width: Number, height: Number, cornerRadius: Number, stroke: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
         path {
             color.nvgColor { nvgColor ->
@@ -236,4 +262,47 @@ object DrawUtil: IAccessor {
                 stuffWithTheNvgColor(nvgColor)
             }
     }
+
+    fun rainbowBar(x: Number, y: Number, width: Number, height: Number, radius: Number, alignment: Alignment = Alignment.TOP_LEFT) {
+        val yay = width.toDouble() / 10.0
+        var x = x.toDouble()
+        for (hue in 0..9) {
+            roundedRect(
+                x, y, yay, height,
+                doubleArrayOf(
+                    if (hue == 0) {
+                        radius.toDouble()
+                    } else {
+                        0.0
+                    },
+                    if (hue == 9) {
+                        radius.toDouble()
+                    } else {
+                        0.0
+                    },
+                    if (hue == 9) {
+                        radius.toDouble()
+                    } else {
+                        0.0
+                    },
+                    if (hue == 0) {
+                        radius.toDouble()
+                    } else {
+                        0.0
+                    }
+                ),
+                LinearGradient(
+                    Pair(
+                        Color.getHSBColor(hue / 10.0f, 1.0f, 1.0f),
+                        Color.getHSBColor((hue / 10.0f) + 0.1f, 1.0f, 1.0f),
+                    ),
+                    Pair(x, y),
+                    Pair(x + yay, y)
+                ),
+                alignment
+            )
+            x += yay
+        }
+    }
+
 }
