@@ -1,11 +1,13 @@
 package blend.util.animation
 
 import java.awt.Color
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 abstract class AbstractAnimation<T>(
     var easing: (Double) -> Double,
     var duration: Number
-) {
+): ReadWriteProperty<Any, T> {
 
     protected var currentTime = 0L
     protected var startTime = 0L
@@ -30,10 +32,13 @@ abstract class AbstractAnimation<T>(
         this.currentValue = currentValue
     }
 
+    override fun getValue(thisRef: Any, property: KProperty<*>): T = currentValue
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: T) = animate(value)
+
 }
 
 class Animation(
-    easing: (Double) -> Double,
+    easing: (Double) -> Double = Easing.sineOut,
     duration: Number = 150.0
 ): AbstractAnimation<Double>(
     easing, duration
@@ -67,8 +72,8 @@ class Animation(
 }
 
 class ColorAnimation(
-    easing: (Double) -> Double,
-    duration: Number
+    easing: (Double) -> Double = Easing.sineOut,
+    duration: Number = 150.0
 ): AbstractAnimation<Color>(easing, duration) {
 
     override var initialValue: Color = Color(0, 0, 0, 0)

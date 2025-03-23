@@ -14,7 +14,7 @@ abstract class AbstractModule(
     val defaultEnabled: Boolean = false,
     defaultKey: Int = GLFW.GLFW_KEY_UNKNOWN,
     defaultHoldOnly: Boolean = false,
-    private val canBeEnabled: Boolean = true
+    val canBeEnabled: Boolean = true
 ): IAccessor, ValueParent, Subscriber {
 
     override val values: MutableList<AbstractValue<*>> = mutableListOf()

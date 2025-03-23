@@ -1,6 +1,7 @@
 package blend.module
 
 import blend.module.impl.movement.SprintModule
+import blend.module.impl.other.TestModule
 import blend.module.impl.visual.ClickGUIModule
 import blend.module.impl.visual.ClientThemeModule
 import blend.util.interfaces.Initializable
@@ -15,7 +16,8 @@ object ModuleManager: Initializable {
         modules = listOf(
             SprintModule,
             ClientThemeModule,
-            ClickGUIModule
+            ClickGUIModule,
+            TestModule
         ).sortedBy {
             it.name
         }.also { modules ->

@@ -180,7 +180,7 @@ class KeyValue(
         val obj = JsonObject()
         obj.addProperty("name", name)
         obj.addProperty("value", get())
-        obj.addProperty("hold", true)
+        obj.addProperty("hold", hold)
         return obj
     }
     override fun useJsonObject(obj: JsonObject): Boolean {

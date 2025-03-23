@@ -67,4 +67,7 @@ object DropdownGUI: Screen(Text.of("fr")), IAccessor {
         components.forEach { it.close() }
         ClickGUIModule.set(false)
     }
+
+    override fun shouldPause() = false
+
 }

@@ -16,8 +16,8 @@ import java.nio.ByteBuffer
 object DrawUtil: IAccessor {
 
     private var context = -1L
-    private lateinit var poppins: ByteBuffer
-    private lateinit var lato: ByteBuffer
+    private lateinit var _fonts: Map<String, ByteBuffer>
+    val fonts = arrayOf("Poppins", "Lato", "Inter", "Ubuntu", "Jetbrains", "Outfit", "Nunito", "Roboto")
 
     @JvmStatic
     fun init() {
@@ -25,10 +25,13 @@ object DrawUtil: IAccessor {
         if (context == -1L) {
             throw IllegalStateException("DrawUtil: NanoVG context is invalid")
         }
-        poppins = MiscUtil.getResourceAsByteBuffer("fonts/poppins.ttf")
-        lato = MiscUtil.getResourceAsByteBuffer("fonts/lato.ttf")
-        nvgCreateFontMem(context, "poppins", poppins, false)
-        nvgCreateFontMem(context, "lato", lato, false)
+
+        _fonts = fonts.associate { name ->
+            Pair(name.lowercase(), MiscUtil.getResourceAsByteBuffer("fonts/${name.lowercase()}.ttf"))
+        }
+        _fonts.forEach { font ->
+            nvgCreateFontMem(context, font.key, font.value, false)
+        }
     }
 
     @JvmStatic
@@ -222,6 +225,34 @@ object DrawUtil: IAccessor {
 
             color.nvgColor { nvgColor ->
                 nvgFillColor(context, nvgColor)
+            }
+            nvgFontFace(context, fontName)
+            nvgFontBlur(context, 0.0f)
+            nvgFontSize(context, fontSize.toFloat())
+            nvgTextAlign(context, alignment.getFontAlignmentFlags())
+            nvgTextBounds(context, x.toFloat(), y.toFloat(), text, bounds)
+            nvgText(context, x.toFloat(), y.toFloat(), text)
+        }
+        return bounds[2].toDouble() - bounds[0].toDouble() to bounds[3].toDouble() - bounds[1].toDouble()
+    }
+    /**
+     * does NOT render in a gradient, takes the first color of the gradient instead.
+     */
+    fun string(text: String, x: Number, y: Number, fontSize: Number, gradient: Gradient, alignment: Alignment = Alignment.TOP_LEFT, fontName: String = ThemeHandler.fontName): Pair<Double, Double> {
+        val bounds = FloatArray(4)
+        path {
+            // shadow first
+            Color(0, 0, 0, 160).nvgColor { nvgColor ->
+                nvgFillColor(context, nvgColor)
+            }
+            nvgFontFace(context, fontName)
+            nvgFontBlur(context, 2.0f)
+            nvgFontSize(context, fontSize.toFloat())
+            nvgTextAlign(context, alignment.getFontAlignmentFlags())
+            nvgText(context, x.toFloat() + 2.0f, y.toFloat() + 2.0f, text)
+
+            gradient.withPaint(context) { paint ->
+                nvgFillPaint(context, paint)
             }
             nvgFontFace(context, fontName)
             nvgFontBlur(context, 0.0f)

@@ -9,11 +9,14 @@ import blend.event.Subscriber
 import blend.module.ModuleManager
 import blend.module.impl.visual.ClientThemeModule
 import blend.util.interfaces.IAccessor
+import blend.util.render.ColorUtil.mixWith
 import blend.util.render.ColorUtil.textColor
 import blend.util.render.LinearGradient
 import org.greenrobot.eventbus.Subscribe
 import org.lwjgl.glfw.GLFW
 import java.awt.Color
+import kotlin.math.PI
+import kotlin.math.sin
 
 sealed interface Handler: Subscriber, IAccessor {
     fun init() = EventBus.register(this)
@@ -62,11 +65,22 @@ object ThemeHandler: Handler {
     val fontName get() = ClientThemeModule.fontFace.lowercase()
     val staticBackground get() = Color(0, 0, 0)
     val textColor get() = background().textColor
-    val linearGradient get() = LinearGradient(
-        colors = Pair(primary, secondary),
-        source = Pair(0, 0),
-        destination = Pair(mc.window.scaledWidth, mc.window.scaledHeight)
-    )
+
+    val linearGradient: LinearGradient
+        get() {
+            val progress = (System.currentTimeMillis() % 2000.0) / 2000.0
+            val blendFactor = (sin(progress * 2 * PI - PI / 2) + 1) / 2
+            val offset = (sin(progress * 2 * PI) * mc.window.scaledWidth / 2).toInt()
+
+            return LinearGradient(
+                colors = Pair(
+                    primary.mixWith(secondary, blendFactor),
+                    secondary.mixWith(primary, blendFactor)
+                ),
+                source = Pair(offset, 0),
+                destination = Pair(mc.window.scaledWidth + offset, mc.window.scaledHeight)
+            )
+        }
 
     fun background(ratio: Double = 0.10): Color {
         return if (ClientThemeModule.tint) {
@@ -81,4 +95,5 @@ object ThemeHandler: Handler {
             staticBackground
         }
     }
+
 }
