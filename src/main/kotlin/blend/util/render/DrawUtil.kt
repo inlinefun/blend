@@ -295,32 +295,32 @@ object DrawUtil: IAccessor {
     }
 
     fun rainbowBar(x: Number, y: Number, width: Number, height: Number, radius: Number, alignment: Alignment = Alignment.TOP_LEFT) {
-        val yay = width.toDouble() / 10.0
-        var x = x.toDouble()
+        val yay = height.toDouble() / 10.0
+        var y = y.toDouble()
         for (hue in 0..9) {
             roundedRect(
-                x, y, yay, height,
+                x, y, width, yay + 0.5,
                 doubleArrayOf(
                     if (hue == 0) {
                         radius.toDouble()
                     } else {
                         0.0
                     },
-                    if (hue == 9) {
-                        radius.toDouble()
-                    } else {
-                        0.0
-                    },
-                    if (hue == 9) {
-                        radius.toDouble()
-                    } else {
-                        0.0
-                    },
                     if (hue == 0) {
                         radius.toDouble()
                     } else {
                         0.0
-                    }
+                    },
+                    if (hue == 9) {
+                        radius.toDouble()
+                    } else {
+                        0.0
+                    },
+                    if (hue == 9) {
+                        radius.toDouble()
+                    } else {
+                        0.0
+                    },
                 ),
                 LinearGradient(
                     Pair(
@@ -328,11 +328,11 @@ object DrawUtil: IAccessor {
                         Color.getHSBColor((hue / 10.0f) + 0.1f, 1.0f, 1.0f),
                     ),
                     Pair(x, y),
-                    Pair(x + yay, y)
+                    Pair(x, y + yay)
                 ),
                 alignment
             )
-            x += yay
+            y += yay
         }
     }
 

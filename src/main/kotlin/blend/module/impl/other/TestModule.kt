@@ -13,5 +13,6 @@ object TestModule: AbstractModule(
     val bool by boolean("Bool", false)
     val list by list("List", arrayOf("Hmm", "idk"))
     val color by color("Color", Color(0, 255, 175))
+    val translucent by color("Translucent", Color(0, 255, 175), true)
 
 }
