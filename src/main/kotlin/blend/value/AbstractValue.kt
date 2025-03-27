@@ -51,19 +51,7 @@ abstract class AbstractNumberValue<T: Number>(
     val minimum: T,
     val maximum: T,
     val incrementBy: T
-): ReadWriteValue<T>(name, parent, visibility, defaultValue) {
-    init {
-        require(minimum.toDouble() < maximum.toDouble()) {
-            "Min value is lesser than Max value in $name of parent ${parent::class.simpleName}"
-        }
-        require(incrementBy.toDouble() > 0) {
-            "Incremental value is lesser than 0 in $name of parent ${parent::class.simpleName}"
-        }
-        require((maximum.toDouble() - minimum.toDouble()) % incrementBy.toDouble() == 0.0) {
-            "Increment value ${incrementBy.toDouble()} of $name in parent ${parent::class.simpleName} must fit evenly into range $minimum - $maximum"
-        }
-    }
-}
+): ReadWriteValue<T>(name, parent, visibility, defaultValue)
 
 abstract class AbstractRangeValue<T: Number>(
     name: String,
