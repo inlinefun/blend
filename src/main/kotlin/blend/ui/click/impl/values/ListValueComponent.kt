@@ -32,7 +32,7 @@ class ListValueComponent(
                     value.availableOptions.forEach { value ->
                         val isSelected = this@ListValueComponent.value.get() == value
                         if (isSelected)
-                            roundedRect(x + 4, yAnim.get(), 1.5, initialHeight - 4, 1, ThemeHandler.primary.alpha(0.75))
+                            roundedRect(x + 4, y + yAnim.get(), 1.5, initialHeight - 4, 1, ThemeHandler.primary.alpha(0.75))
                         if (this@ListValueComponent.value.name == "Font face") {
                             string(value, x + 8, y + fr + (initialHeight / 2), 9, ThemeHandler.textColor, Alignment.CENTER_LEFT, value.lowercase())
                         } else {
@@ -45,7 +45,7 @@ class ListValueComponent(
 
         }
 
-        yAnim.animate(y + ((currentIndex + 1) * initialHeight) + 2)
+        yAnim.animate(((currentIndex + 1) * initialHeight) + 2)
         height = if (expanded) fr else initialHeight
     }
 
