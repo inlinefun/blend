@@ -2,6 +2,7 @@ package blend.ui.click.impl
 
 import blend.ui.AbstractUIComponent
 import blend.util.animation.Animation
+import blend.util.animation.Easing
 import blend.value.AbstractValue
 
 abstract class AbstractValueComponent(
@@ -21,7 +22,7 @@ abstract class DynamicAbstractValueComponent(
     parent, value, height
 ) {
     open val initialHeight = height
-    val expand = Animation().also { animation ->
+    val expand = Animation(Easing.linear).also { animation ->
         animation.set(initialHeight)
     }
     override var height: Double

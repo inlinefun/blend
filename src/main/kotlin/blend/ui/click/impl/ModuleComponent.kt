@@ -102,7 +102,6 @@ class ModuleComponent(
     override fun init() = components.forEach { it.init() }
     override fun release(mouseX: Double, mouseY: Double, mouseButton: Int) = components.any { it.release(mouseX, mouseY, mouseButton) }
     override fun keyDown(keyCode: Int, scancode: Int, modifiers: Int) = components.any { it.keyDown(keyCode, scancode, modifiers) }
-    override fun scroll(mouseX: Double, mouseY: Double, horizontalScroll: Double, verticalScroll: Double) = components.any { it.scroll(mouseX, mouseY, horizontalScroll, verticalScroll) }
     override fun close() = components.forEach { it.close() }
 
 }
