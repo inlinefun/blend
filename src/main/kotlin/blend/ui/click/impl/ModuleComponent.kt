@@ -7,6 +7,7 @@ import blend.ui.click.impl.values.BooleanValueComponent
 import blend.ui.click.impl.values.ColorValueComponent
 import blend.ui.click.impl.values.KeyValueComponent
 import blend.ui.click.impl.values.ListValueComponent
+import blend.ui.click.impl.values.NumberValueComponent
 import blend.util.animation.Animation
 import blend.util.animation.ColorAnimation
 import blend.util.animation.Easing
@@ -14,6 +15,7 @@ import blend.util.render.Alignment
 import blend.util.render.ColorUtil.alpha
 import blend.util.render.ColorUtil.textColor
 import blend.util.render.DrawUtil
+import blend.value.AbstractNumberValue
 import blend.value.BooleanValue
 import blend.value.ColorValue
 import blend.value.KeyValue
@@ -32,6 +34,7 @@ class ModuleComponent(
             is BooleanValue -> BooleanValueComponent(this, value)
             is ColorValue -> ColorValueComponent(this, value)
             is ListValue -> ListValueComponent(this, value)
+            is AbstractNumberValue -> NumberValueComponent(this, value)
             is KeyValue -> if (module.canBeEnabled) KeyValueComponent(this, value) else null
             else -> {
                 throw IllegalStateException("Could not initialize a component for ${value::class.simpleName}")

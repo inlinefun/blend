@@ -24,7 +24,8 @@ class IntValue(
         }
     }
     override fun set(newValue: Int) {
-        super.set(newValue.coerceIn(minimum, maximum))
+        val steps = (newValue.coerceIn(minimum, maximum) - minimum) / incrementBy
+        super.set(minimum + steps * incrementBy)
     }
     override fun getJsonObject(): JsonObject {
         val obj = JsonObject()
