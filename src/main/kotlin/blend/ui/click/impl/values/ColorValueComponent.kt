@@ -2,7 +2,7 @@ package blend.ui.click.impl.values
 
 import blend.handler.ThemeHandler
 import blend.ui.click.impl.DynamicAbstractValueComponent
-import blend.ui.click.impl.ModuleComponent
+import blend.ui.click.impl.IParentValueComponent
 import blend.util.animation.Animation
 import blend.util.render.Alignment
 import blend.util.render.ColorUtil.alpha
@@ -13,7 +13,7 @@ import blend.value.ColorValue
 import java.awt.Color
 
 class ColorValueComponent(
-    parent: ModuleComponent,
+    parent: IParentValueComponent,
     override val value: ColorValue
 ): DynamicAbstractValueComponent(
     parent, value
@@ -67,26 +67,25 @@ class ColorValueComponent(
                     Pair(x + 4 + size, y + initialHeight + 4 + size)
                 ))
                 rainbowBar(rgbX, y + initialHeight + 4, rgbW, size, 2)
-                if (tW != 0.0)
+                if (value.translucent) {
                     roundedRect(tX, y + initialHeight + 4, tW, size, 2, LinearGradient(
-                        Pair(value.get(), value.get().textColor.textColor),
+                        Pair(Color.getHSBColor(value.hue, value.saturation, value.brightness), value.get().textColor.textColor),
                         Pair(tX, y + initialHeight + 4),
                         Pair(tX, y + initialHeight + 4 + size)
                     ))
+                }
 
-                roundedRect(x + 4 + (size * value.saturation), y + initialHeight + 4 + (size * (1.0 - value.brightness)), pickerR, pickerR, 3, ThemeHandler.textColor, Alignment.CENTER)
+                roundedRect(x + 4 + (size * value.saturation), y + initialHeight + 4 + (size * (1.0 - value.brightness)), pickerR, pickerR, 3, value.get().textColor, Alignment.CENTER)
+                outlinedRoundedRect(x + 4 + (size * value.saturation), y + initialHeight + 4 + (size * (1.0 - value.brightness)), pickerR, pickerR, 3, 1, value.get().textColor.textColor, Alignment.CENTER)
                 roundedRect(x + 4 + (size * value.saturation), y + initialHeight + 4 + (size * (1.0 - value.brightness)), 2 * (pickerR - 6), 2 * (pickerR - 6), 3, value.get(), Alignment.CENTER)
 
                 roundedRect(rgbX + (rgbW / 2), y + initialHeight + 4 + (size * value.hue), hueR, hueR, 3, ThemeHandler.textColor, Alignment.CENTER)
                 roundedRect(rgbX + (rgbW / 2), y + initialHeight + 4 + (size * value.hue), 2 * (hueR - 6), 2 * (hueR - 6), 2, Color.getHSBColor(value.hue, 1.0f, 1.0f), Alignment.CENTER)
 
                 if (value.translucent) {
-                    roundedRect(tX + (tW / 2), y + initialHeight + 4 + (size * (1.0 - value.alpha)), transparencyR, transparencyR, 3, ThemeHandler.textColor, Alignment.CENTER)
-                    roundedRect(tX + (tW / 2), y + initialHeight + 4 + (size * (1.0 - value.alpha)), 2 * (transparencyR - 6), 2 * (transparencyR - 6), 2, LinearGradient(
-                        Pair(value.get(), value.get().textColor.textColor),
-                        Pair(tX, y + initialHeight + 4),
-                        Pair(tX, y + initialHeight + 4 + size)
-                    ), Alignment.CENTER)
+                    roundedRect(tX + (tW / 2), y + initialHeight + 4 + (size * (1.0 - value.alpha)), transparencyR, transparencyR, 3, value.get().textColor, Alignment.CENTER)
+                    outlinedRoundedRect(tX + (tW / 2), y + initialHeight + 4 + (size * (1.0 - value.alpha)), transparencyR, transparencyR, 3, 1, value.get().textColor.textColor, Alignment.CENTER)
+                    roundedRect(tX + (tW / 2), y + initialHeight + 4 + (size * (1.0 - value.alpha)), 2 * (transparencyR - 6), 2 * (transparencyR - 6), 2, Color.getHSBColor(value.hue, value.saturation, value.brightness), Alignment.CENTER)
                 }
 
                 fr += size + 4

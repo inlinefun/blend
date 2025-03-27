@@ -2,7 +2,7 @@ package blend.ui.click.impl.values
 
 import blend.handler.ThemeHandler
 import blend.ui.click.impl.AbstractValueComponent
-import blend.ui.click.impl.ModuleComponent
+import blend.ui.click.impl.IParentValueComponent
 import blend.util.animation.Animation
 import blend.util.animation.ColorAnimation
 import blend.util.render.Alignment
@@ -12,7 +12,7 @@ import blend.util.render.DrawUtil
 import blend.value.BooleanValue
 
 class BooleanValueComponent(
-    parent: ModuleComponent,
+    parent: IParentValueComponent,
     override val value: BooleanValue
 ): AbstractValueComponent(
     parent, value

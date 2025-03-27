@@ -14,7 +14,8 @@ object TestModule: AbstractModule(
     val list by list("List", arrayOf("Hmm", "idk"))
     val color by color("Color", Color(0, 255, 175))
     val translucent by color("Translucent", Color(0, 255, 175), true)
-    val int by int("hi", 3, 0, 10, 1)
-    val double by double("double", 3.0, 3.0, 6.0, 0.05)
+    val numbers = parent("Numbers")
+    val int by int("hi", 3, 0, 10, 1, numbers)
+    val double by double("double", 3.0, 3.0, 6.0, 0.1, numbers)
 
 }

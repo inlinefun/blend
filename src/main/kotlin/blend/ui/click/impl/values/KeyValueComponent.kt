@@ -2,6 +2,7 @@ package blend.ui.click.impl.values
 
 import blend.handler.ThemeHandler
 import blend.ui.click.impl.DynamicAbstractValueComponent
+import blend.ui.click.impl.IParentValueComponent
 import blend.ui.click.impl.ModuleComponent
 import blend.util.animation.Animation
 import blend.util.animation.ColorAnimation
@@ -14,7 +15,7 @@ import blend.value.KeyValue
 import org.lwjgl.glfw.GLFW
 
 class KeyValueComponent(
-    parent: ModuleComponent,
+    parent: IParentValueComponent,
     override val value: KeyValue
 ): DynamicAbstractValueComponent(
     parent, value

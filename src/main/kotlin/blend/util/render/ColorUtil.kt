@@ -5,6 +5,12 @@ import java.awt.Color
 object ColorUtil {
 
     val Color.textColor: Color get() = if (0.2126 * (red / 255) + 0.7152 * (green / 255) + 0.0722 * (blue / 255) > 0.5) Color.BLACK else Color.WHITE
+    val Color.otherTextColor: Color get() {
+        val luminance = 0.2126 * (red / 255.0) + 0.7152 * (green / 255.0) + 0.0722 * (blue / 255.0)
+        val invertedLuminance = 1.0 - luminance // Invert the luminance
+        val grayValue = (invertedLuminance * 255).toInt()
+        return Color(grayValue, grayValue, grayValue)
+    }
 
     fun Color.alpha(alpha: Int): Color {
         return Color(this.red, this.green, this.blue, alpha.coerceIn(0, 255))

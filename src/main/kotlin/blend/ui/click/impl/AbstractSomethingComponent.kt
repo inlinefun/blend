@@ -5,8 +5,12 @@ import blend.util.animation.Animation
 import blend.util.animation.Easing
 import blend.value.AbstractValue
 
+interface IParentValueComponent {
+    var width: Double
+}
+
 abstract class AbstractValueComponent(
-    parent: ModuleComponent,
+    parent: IParentValueComponent,
     protected open val value: AbstractValue<*>,
     height: Double = 18.0
 ): AbstractUIComponent(
@@ -15,7 +19,7 @@ abstract class AbstractValueComponent(
 )
 
 abstract class DynamicAbstractValueComponent(
-    parent: ModuleComponent,
+    parent: IParentValueComponent,
     override val value: AbstractValue<*>,
     height: Double = 18.0
 ): AbstractValueComponent(

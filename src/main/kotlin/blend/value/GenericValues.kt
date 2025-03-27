@@ -1,11 +1,48 @@
 package blend.value
 
 import blend.module.AbstractModule
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import java.awt.Color
 import kotlin.math.roundToInt
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
+
+class ExpandableValue(
+    name: String,
+    parent: AbstractModule,
+    visibility: () -> Boolean
+): AbstractValue<Boolean>(name, parent, visibility, false), ValueParent {
+
+    override val values: MutableList<AbstractValue<*>> = mutableListOf()
+
+    override fun getJsonObject(): JsonObject {
+        val obj = JsonObject()
+        val subValues = JsonArray()
+        this.values.forEach { value ->
+            subValues.add(value.getJsonObject())
+        }
+        obj.addProperty("name", name)
+        obj.add("values", subValues)
+        return obj
+    }
+
+    override fun useJsonObject(obj: JsonObject): Boolean {
+        return try {
+            obj.get("values").asJsonArray.mapNotNull {
+                it.asJsonObject
+            }.forEach {
+                this.values.firstOrNull {
+                    it.name.equals("name", true)
+                }?.useJsonObject(it)
+            }
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+}
 
 class BooleanValue(
     name: String,
@@ -96,6 +133,7 @@ class ColorValue(
         obj.addProperty("hue", hue)
         obj.addProperty("saturation", saturation)
         obj.addProperty("brightness", brightness)
+        obj.addProperty("alpha", alpha)
         return obj
     }
     override fun useJsonObject(obj: JsonObject): Boolean {
@@ -106,6 +144,9 @@ class ColorValue(
                 obj.get("saturation").asFloat
             )
             set(hsb)
+            obj.get("alpha")?.asFloat?.let {
+                alpha = it
+            }
             true
         } catch (_: Exception) {
             loadError()

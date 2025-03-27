@@ -2,7 +2,7 @@ package blend.ui.click.impl.values
 
 import blend.handler.ThemeHandler
 import blend.ui.click.impl.DynamicAbstractValueComponent
-import blend.ui.click.impl.ModuleComponent
+import blend.ui.click.impl.IParentValueComponent
 import blend.util.animation.Animation
 import blend.util.render.Alignment
 import blend.util.render.ColorUtil.alpha
@@ -10,7 +10,7 @@ import blend.util.render.DrawUtil
 import blend.value.ListValue
 
 class ListValueComponent(
-    parent: ModuleComponent,
+    parent: IParentValueComponent,
     override val value: ListValue
 ): DynamicAbstractValueComponent(
     parent, value

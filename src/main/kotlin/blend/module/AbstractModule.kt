@@ -46,6 +46,7 @@ abstract class AbstractModule(
     fun list(name: String, values: Array<String>, parent: ValueParent = this, visibility: () -> Boolean = { true }) = ListValue(name, parent, visibility, values)
     fun color(name: String, value: Color, hasAlpha: Boolean = false, parent: ValueParent = this, visibility: () -> Boolean = { true }) = ColorValue(name, parent, visibility, value, hasAlpha)
     fun bind(name: String, defaultKey: Int, hold: Boolean, parent: ValueParent = this, visibility: () -> Boolean = { true }) = KeyValue(name, parent, visibility, defaultKey, hold)
+    fun parent(name: String, visibility: () -> Boolean = { true }) = ExpandableValue(name, this, visibility)
 }
 
 enum class ModuleCategory {

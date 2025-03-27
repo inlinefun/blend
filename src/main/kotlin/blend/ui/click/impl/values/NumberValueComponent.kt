@@ -2,7 +2,7 @@ package blend.ui.click.impl.values
 
 import blend.handler.ThemeHandler
 import blend.ui.click.impl.AbstractValueComponent
-import blend.ui.click.impl.ModuleComponent
+import blend.ui.click.impl.IParentValueComponent
 import blend.util.animation.Animation
 import blend.util.render.Alignment
 import blend.util.render.ColorUtil.darkerBy
@@ -13,7 +13,7 @@ import blend.value.IntValue
 import kotlin.math.roundToInt
 
 class NumberValueComponent(
-    parent: ModuleComponent,
+    parent: IParentValueComponent,
     override val value: AbstractNumberValue<*>
 ): AbstractValueComponent(
     parent,
