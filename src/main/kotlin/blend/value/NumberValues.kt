@@ -9,8 +9,9 @@ class IntValue(
     visibility: () -> Boolean,
     defaultValue: Int,
     minimum: Int,
-    maximum: Int
-): AbstractNumberValue<Int>(name, parent, visibility, defaultValue, minimum, maximum, 1) {
+    maximum: Int,
+    incrementBy: Int = 1
+): AbstractNumberValue<Int>(name, parent, visibility, defaultValue, minimum, maximum, incrementBy) {
     override fun set(newValue: Int) {
         super.set(newValue.coerceIn(minimum, maximum))
     }
