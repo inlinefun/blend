@@ -12,6 +12,17 @@ class IntValue(
     maximum: Int,
     incrementBy: Int = 1
 ): AbstractNumberValue<Int>(name, parent, visibility, defaultValue, minimum, maximum, incrementBy) {
+    init {
+        require(minimum < maximum) {
+            "Min value is lesser than Max value in $name of parent ${parent::class.simpleName}"
+        }
+        require(incrementBy > 0) {
+            "Incremental value is lesser than 0 in $name of parent ${parent::class.simpleName}"
+        }
+        require((maximum - minimum.toDouble()) % incrementBy == 0.0) {
+            "Increment value $incrementBy of $name in parent ${parent::class.simpleName} must fit evenly into range $minimum - $maximum"
+        }
+    }
     override fun set(newValue: Int) {
         super.set(newValue.coerceIn(minimum, maximum))
     }
@@ -31,35 +42,6 @@ class IntValue(
     }
 }
 
-class FloatValue(
-    name: String,
-    parent: ValueParent,
-    visibility: () -> Boolean,
-    defaultValue: Float,
-    minimum: Float,
-    maximum: Float,
-    incrementBy: Float
-): AbstractNumberValue<Float>(name, parent, visibility, defaultValue, minimum, maximum, incrementBy) {
-    override fun set(newValue: Float) {
-        val steps = ((newValue.coerceIn(minimum, maximum) - minimum) / incrementBy).roundToInt()
-        super.set(minimum + steps * incrementBy)
-    }
-    override fun getJsonObject(): JsonObject {
-        val obj = JsonObject()
-        obj.addProperty("name", name)
-        obj.addProperty("value", get())
-        return obj
-    }
-    override fun useJsonObject(obj: JsonObject): Boolean {
-        return try {
-            set(obj.get("value").asFloat)
-            true
-        } catch (_: Exception) {
-            false
-        }
-    }
-}
-
 class DoubleValue(
     name: String,
     parent: ValueParent,
@@ -69,6 +51,21 @@ class DoubleValue(
     maximum: Double,
     incrementBy: Double
 ): AbstractNumberValue<Double>(name, parent, visibility, defaultValue, minimum, maximum, incrementBy) {
+    init {
+        require(minimum < maximum) {
+            "Min value is lesser than Max value in $name of parent ${parent::class.simpleName}"
+        }
+        require(incrementBy > 0) {
+            "Incremental value is lesser than 0 in $name of parent ${parent::class.simpleName}"
+        }
+        val scaleFactor = 1e9 // Choose a large enough power of ten
+        val scaledMin = (minimum * scaleFactor).toLong()
+        val scaledMax = (maximum * scaleFactor).toLong()
+        val scaledIncrement = (incrementBy * scaleFactor).toLong()
+        require((scaledMax - scaledMin) % scaledIncrement == 0L) {
+            "Increment value $incrementBy of $name in parent ${parent::class.simpleName} must fit evenly into range $minimum - $maximum"
+        }
+    }
     override fun set(newValue: Double) {
         val steps = ((newValue.coerceIn(minimum, maximum) - minimum) / incrementBy).roundToInt()
         super.set(minimum + steps * incrementBy)
