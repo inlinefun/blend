@@ -1,13 +1,11 @@
 package blend.ui.click.impl.values
 
 import blend.handler.ThemeHandler
-import blend.ui.click.impl.AbstractValueComponent
 import blend.ui.click.impl.DynamicAbstractValueComponent
 import blend.ui.click.impl.IParentValueComponent
 import blend.ui.click.impl.ModuleComponent
 import blend.util.render.Alignment
 import blend.util.render.ColorUtil.alpha
-import blend.util.render.ColorUtil.textColor
 import blend.util.render.DrawUtil
 import blend.value.AbstractNumberValue
 import blend.value.BooleanValue
