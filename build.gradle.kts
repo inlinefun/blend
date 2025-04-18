@@ -32,7 +32,10 @@ dependencies {
 tasks.withType<ProcessResources>() {
 	filesMatching("fabric.mod.json") {
 		expand(mapOf(
-			"version" to project.version
+			"version" to project.version,
+			"minecraft" to libs.versions.minecraft.get(),
+			"fabric_loader" to libs.versions.loader.get(),
+			"fabric_kotlin" to libs.versions.fabric.kotlin.get()
 		))
 	}
 }

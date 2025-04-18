@@ -5,19 +5,18 @@
 	"name": "Blend",
 	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
-		"Me!"
+		"inlinefun"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/inlinefun/blend"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/blend/icon.png",
-	"environment": "*",
+	"environment": "client",
 	"entrypoints": {
-		"main": [
+		"client": [
 			{
-				"value": "blend.Blend",
+				"value": "blend.Initializer",
 				"adapter": "kotlin"
 			}
 		]
@@ -26,11 +25,10 @@
 		"blend.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.16.13",
-		"minecraft": "~1.21.5",
+		"fabricloader": ">=${fabric_loader}",
+		"minecraft": "~${minecraft}",
 		"java": ">=21",
-		"fabric-api": "*",
-		"fabric-language-kotlin": "*"
+		"fabric-language-kotlin": ">=${fabric_kotlin}"
 	},
 	"suggests": {
 		"another-mod": "*"
