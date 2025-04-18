@@ -1,0 +1,25 @@
+[versions]
+kotlin = "2.1.20"
+loader = "0.16.13"
+minecraft = "1.21.5"
+yarn = "1.21.5+build.1"
+fabric-kotlin = "1.13.2+kotlin.2.1.20"
+fabric-loom = "1.10-SNAPSHOT"
+ktor-version = "3.1.2"
+
+[plugins]
+fabric-loom = { id = "fabric-loom", version.ref = "fabric-loom" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+[libraries]
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+yarn = { module = "net.fabricmc:yarn", version.ref = "yarn" }
+fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "loader" }
+fabric-language-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-kotlin" }
+
+server-ktor-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor-version" }
+server-ktor-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor-version" }
+server-ktor-websockets = { module = "io.ktor:ktor-server-websockets", version.ref = "ktor-version" }
+server-ktor-content-negotation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor-version" }
+server-ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
+server-ktor-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor-version" }
