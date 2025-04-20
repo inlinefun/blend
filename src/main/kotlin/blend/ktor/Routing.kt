@@ -2,9 +2,11 @@ package blend.ktor
 
 import blend.ktor.data.ClientInfoResponse
 import io.ktor.server.application.Application
+import io.ktor.server.http.content.staticResources
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
+import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.server.websocket.webSocket
 import kotlinx.coroutines.channels.consumeEach
@@ -25,13 +27,19 @@ fun Application.configureRouting() {
             }
         }
 
-        get {
-            call.respondText("hmm...")
+        route("/api") {
+            get {
+                call.respondText("Documentation has not been prepared yet. Please refer the source.")
+            }
+            get("/info") {
+                call.respond(ClientInfoResponse.get())
+            }
         }
 
-        get("/info") {
-            call.respond(ClientInfoResponse.get())
-        }
+        staticResources(
+            remotePath = "/",
+            basePackage = "/assets/static/"
+        )
 
     }
 }
