@@ -11,6 +11,7 @@ gradle-node = "7.1.0"
 [plugins]
 fabric-loom = { id = "fabric-loom", version.ref = "fabric-loom" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 gradle-node = { id = "com.github.node-gradle.node", version.ref = "gradle-node" }
 
 [libraries]

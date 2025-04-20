@@ -1,4 +1,3 @@
-import com.github.gradle.node.npm.task.NpmInstallTask
 import com.github.gradle.node.npm.task.NpmTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -6,6 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	alias(libs.plugins.fabric.loom)
 	alias(libs.plugins.kotlin.jvm)
+	alias(libs.plugins.kotlin.serialization)
 	alias(libs.plugins.gradle.node)
 }
 
@@ -60,8 +60,9 @@ tasks.withType<KotlinCompile>().configureEach {
 	}
 }
 
-tasks.register<NpmInstallTask>("installPackages") {
+tasks.register<NpmTask>("installPackages") {
 	workingDir = file(webappDir)
+	args = listOf("install")
 	inputs.file("$webappDir/package.json")
 	outputs.dir("$webappDir/node_modules")
 }
@@ -69,7 +70,7 @@ tasks.register<NpmInstallTask>("installPackages") {
 tasks.register<NpmTask>("buildWebApp") {
 	dependsOn("installPackages")
 	workingDir = file(webappDir)
-	args = listOf<String>("run", "build")
+	args = listOf("run", "build")
 	inputs.files("$webappDir/index.html", "$webappDir/src/")
 	outputs.dir("$webappDir/dist")
 }
