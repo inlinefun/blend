@@ -10,11 +10,15 @@ import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.websocket.WebSockets
+import io.ktor.server.websocket.pingPeriod
+import io.ktor.server.websocket.timeout
+import kotlin.time.Duration.Companion.seconds
 
 object KtorApplication {
     
     private val server = embeddedServer(
         factory = Netty,
+        host = "0.0.0.0",
         port = 6969,
         module = {
             installModules()
@@ -24,6 +28,9 @@ object KtorApplication {
     
     fun initialize() {
         server.start(wait = false)
+    }
+    fun shutdown() {
+        server.stop()
     }
 
     private fun Application.installModules() {
@@ -35,6 +42,8 @@ object KtorApplication {
         }
         install(WebSockets) {
             masking = false
+            timeout = 15.seconds
+            pingPeriod = 15.seconds
             maxFrameSize = Long.MAX_VALUE
             contentConverter = KotlinxWebsocketSerializationConverter(Constants.json)
         }
