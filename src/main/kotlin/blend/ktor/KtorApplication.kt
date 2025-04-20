@@ -4,11 +4,15 @@ import blend.util.Constants
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationCallPipeline
+import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.cors.routing.CORS
+import io.ktor.server.request.uri
+import io.ktor.server.response.respondRedirect
 import io.ktor.server.websocket.WebSockets
 import io.ktor.server.websocket.pingPeriod
 import io.ktor.server.websocket.timeout
@@ -47,6 +51,16 @@ object KtorApplication {
             maxFrameSize = Long.MAX_VALUE
             contentConverter = KotlinxWebsocketSerializationConverter(Constants.json)
         }
+
+        intercept(ApplicationCallPipeline.Call) {
+            val path = call.request.uri
+            if (path.endsWith("/") && path != "/") {
+                val normalizedPath = path.removeSuffix("/")
+                call.respondRedirect(normalizedPath, permanent = true)
+                finish()
+            }
+        }
+
     }
     
 }
