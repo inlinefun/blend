@@ -1,11 +1,15 @@
+import com.github.gradle.node.npm.task.NpmInstallTask
+import com.github.gradle.node.npm.task.NpmTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	alias(libs.plugins.fabric.loom)
 	alias(libs.plugins.kotlin.jvm)
+	alias(libs.plugins.gradle.node)
 }
 
+val webappDir = "webapp"
 version = "6.0"
 group = "blend"
 
@@ -30,6 +34,12 @@ dependencies {
 }
 
 tasks.withType<ProcessResources>() {
+	dependsOn("buildWebApp")
+
+	from("webapp/dist/") {
+		into("/assets/static/")
+	}
+
 	filesMatching("fabric.mod.json") {
 		expand(mapOf(
 			"version" to project.version,
@@ -48,6 +58,20 @@ tasks.withType<KotlinCompile>().configureEach {
 	compilerOptions {
 		jvmTarget.set(JvmTarget.JVM_21)
 	}
+}
+
+tasks.register<NpmInstallTask>("installPackages") {
+	workingDir = file(webappDir)
+	inputs.file("$webappDir/package.json")
+	outputs.dir("$webappDir/node_modules")
+}
+
+tasks.register<NpmTask>("buildWebApp") {
+	dependsOn("installPackages")
+	workingDir = file(webappDir)
+	args = listOf<String>("run", "build")
+	inputs.files("$webappDir/index.html", "$webappDir/src/")
+	outputs.dir("$webappDir/dist")
 }
 
 java {
