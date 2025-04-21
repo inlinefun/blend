@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+* {
+    @apply transition-all ease-out duration-150;
+}
+
+body {
+    @apply select-none bg-white text-black dark:bg-gray-950 dark:text-white;
+}

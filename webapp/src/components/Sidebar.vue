@@ -4,6 +4,4 @@
 
 <template>
 
-    <h1 class="font-medium">Empty...</h1>
-
 </template>
