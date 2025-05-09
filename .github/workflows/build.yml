@@ -24,7 +24,7 @@ jobs:
       - name: build
         run: ./gradlew build
       - name: rename build artifacts
-        run: mv /build/libs/*.jar blend.jar
+        run: mv build/libs/*.jar build/libs/blend.jar
       - name: upload build artifact
         uses: appleboy/scp-action@v1.0.0
         with:
