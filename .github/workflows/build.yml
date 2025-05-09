@@ -23,11 +23,13 @@ jobs:
         run: chmod +x ./gradlew
       - name: build
         run: ./gradlew build
+      - name: rename build artifacts
+        run: mv /build/libs/*.jar blend.jar
       - name: upload build artifact
         uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ SECRETS.HOST }}
           username: ${{ SECRETS.USER }}
           key: ${{ SECRETS.KEY }}
-          source: "build/libs/blend-5.0.jar"
-          target: "/home/ubuntu/blend.jar"
+          source: "build/libs/blend.jar"
+          target: "/home/ubuntu/"
