@@ -1,18 +1,20 @@
 {
-    "required": true,
-    "package": "blend.mixin",
-    "compatibilityLevel": "JAVA_21",
-    "injectors": {
-        "defaultRequire": 1
-    },
-    "mixins": [
-        "minecraft.KeyboardMixin"
-    ],
-    "client": [
-        "minecraft.MinecraftClientMixin",
-        "minecraft.gui.screen.ChatScreenMixin",
-        "minecraft.input.KeyboardInputMixin",
-        "minecraft.network.ClientPlayerEntityMixin",
-        "minecraft.option.KeybindingMixin"
-    ]
+  "required": true,
+  "package": "blend.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "minecraft.KeyboardMixin"
+  ],
+  "client": [
+    "minecraft.MinecraftClientMixin",
+    "minecraft.MouseMixin",
+    "minecraft.gui.screen.ChatScreenMixin",
+    "minecraft.input.KeyboardInputMixin",
+    "minecraft.network.ClientPlayerEntityMixin",
+    "minecraft.option.KeybindingMixin",
+    "minecraft.util.InputUtilKeyMixin"
+  ]
 }

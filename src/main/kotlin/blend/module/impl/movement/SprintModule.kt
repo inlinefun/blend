@@ -3,7 +3,7 @@ package blend.module.impl.movement
 import blend.event.InputHandleEvent
 import blend.module.AbstractModule
 import blend.module.ModuleCategory
-import blend.util.extensions.isKeyDown
+import blend.util.extensions.isHeld
 import org.greenrobot.eventbus.Subscribe
 
 object SprintModule: AbstractModule(
@@ -14,11 +14,12 @@ object SprintModule: AbstractModule(
 ) {
 
     override fun onDisable() {
-        mc.options.sprintKey.isPressed = mc.options.sprintKey.isKeyDown()
+        mc.options.sprintKey.isPressed = mc.options.sprintKey.isHeld()
     }
 
     @Subscribe
-    fun onHandleEvent(event: InputHandleEvent) {
+    @Suppress("unused")
+    fun onHandleEvent(@Suppress("unused") event: InputHandleEvent) {
         mc.options.sprintKey.isPressed = true
     }
 
