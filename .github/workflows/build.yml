@@ -31,5 +31,6 @@ jobs:
           host: ${{ SECRETS.HOST }}
           username: ${{ SECRETS.USER }}
           key: ${{ SECRETS.KEY }}
+          overwrite: true
           source: "build/libs/blend.jar"
           target: "/home/ubuntu/"
