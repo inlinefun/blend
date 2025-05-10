@@ -72,7 +72,9 @@ class ModuleComponent(
                 string(module.name, x + (initialHeight / 4), y + (initialHeight / 2), 11, background.textColor, Alignment.CENTER_LEFT)
                 roundedRect(x + 2, y + initialHeight + 2, 1.5, height - (initialHeight + if (expanded) 4 else 0), 1, ThemeHandler.primary.alpha(0.5))
 
-                components.forEach { component ->
+                components.filter { component ->
+                    component.value.visibility()
+                }.forEach { component ->
                     component.position(x + 4, y + fr)
                     component.width = width - 4
                     component.render(mouseX, mouseY)

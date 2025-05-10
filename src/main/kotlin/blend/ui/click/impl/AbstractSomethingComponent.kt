@@ -11,7 +11,7 @@ interface IParentValueComponent {
 
 abstract class AbstractValueComponent(
     parent: IParentValueComponent,
-    protected open val value: AbstractValue<*>,
+    open val value: AbstractValue<*>,
     height: Double = 18.0
 ): AbstractUIComponent(
     width = parent.width,
