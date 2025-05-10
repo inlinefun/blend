@@ -1,6 +1,8 @@
 package blend.handler
 
+import blend.util.extensions.position
 import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.entity.mob.Angerable
 import net.minecraft.entity.mob.HostileEntity
 import net.minecraft.entity.mob.MobEntity
@@ -32,6 +34,26 @@ object TargetHandler: Handler {
         }
     }
 
+    fun List<LivingEntity>.sortedBy(priority: TargetPriority): List<LivingEntity> {
+        return this.sortedBy { target ->
+            when(priority) {
+                TargetPriority.DISTANCE -> {
+                    player.squaredDistanceTo(target)
+                }
+                TargetPriority.HEALTH -> {
+                    target.health.toDouble()
+                }
+                TargetPriority.ARMOR -> {
+                    target.getAttributeValue(EntityAttributes.ARMOR)
+                }
+                TargetPriority.FOV -> {
+                    val toTarget = target.position.subtract(player.position).normalize()
+                    -player.rotationVector.normalize().dotProduct(toTarget)
+                }
+            }
+        }
+    }
+
 }
 
 data class TargetFilter(
@@ -41,3 +63,21 @@ data class TargetFilter(
     val filterNeutral: Boolean,
     val passive: Boolean
 )
+
+enum class TargetPriority {
+    DISTANCE,
+    FOV,
+    HEALTH,
+    ARMOR;
+    val label = this.name.lowercase().replaceFirstChar { it.uppercase() }
+    companion object {
+        val all = entries.map { it.label }.toTypedArray()
+        fun from(value: String): TargetPriority {
+            return try {
+                valueOf(value.uppercase())
+            } catch (_: IllegalArgumentException) {
+                DISTANCE
+            }
+        }
+    }
+}
