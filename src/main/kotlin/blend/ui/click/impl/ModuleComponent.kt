@@ -103,7 +103,7 @@ class ModuleComponent(
                 }
             }
         }
-        return components.filter { it.isOver(mouseX, mouseY) }.any { it.click(mouseX, mouseY, mouseButton) }
+        return components.filter { it.value.visibility() && it.isOver(mouseX, mouseY) }.any { it.click(mouseX, mouseY, mouseButton) }
     }
 
     // boring
