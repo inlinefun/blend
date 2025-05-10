@@ -22,6 +22,10 @@ data class KeyEvent(
     val action: Int,
     val modifiers: Int
 ): Event
+data class MouseTickEvent(
+    val deltaX: Double,
+    val deltaY: Double
+): Event
 
 data class ChatSendEvent(
     val content: String
