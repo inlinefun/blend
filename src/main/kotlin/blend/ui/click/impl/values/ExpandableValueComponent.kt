@@ -44,7 +44,9 @@ class ExpandableValueComponent(
                 string(if (expanded) "+" else "-", x + width - (initialHeight / 2), y + (initialHeight / 2), 9, ThemeHandler.textColor, Alignment.CENTER_LEFT)
                 roundedRect(x + 2, y + initialHeight + 2, 1.5, height - (initialHeight + if (expanded) 4 else 0), 1, ThemeHandler.secondary.alpha(0.5))
 
-                components.forEach { component ->
+                components.filter { component ->
+                    component.value.visibility()
+                }.forEach { component ->
                     component.position(x + 4, y + fr)
                     component.width = width - 4
                     component.render(mouseX, mouseY)
