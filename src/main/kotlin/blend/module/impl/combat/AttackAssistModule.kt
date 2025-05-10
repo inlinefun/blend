@@ -1,10 +1,12 @@
 package blend.module.impl.combat
 
 import blend.event.InputHandleEvent
+import blend.handler.TargetFilter
 import blend.module.AbstractModule
 import blend.module.ModuleCategory
 import blend.util.extensions.isHeld
 import blend.util.extensions.simulateAction
+import net.minecraft.entity.LivingEntity
 import net.minecraft.item.AxeItem
 import net.minecraft.item.MaceItem
 import net.minecraft.item.SwordItem
@@ -19,20 +21,33 @@ object AttackAssistModule: AbstractModule(
 
     private val offset by double("Offset", 0.0, 0.0, 5.0, 0.25)
     private val holdOnly by boolean("Hold only", true)
-    private val weaponsOnly by boolean("Weapons only", true)
     private val crits by boolean("Smart crits", true) // not very smart :(
-    private val weapons = parent("Weapons") {
-        weaponsOnly
-    }
-    private val axe by boolean("Axe", true, weapons)
-    private val sword by boolean("Sword", true, weapons)
-    private val mace by boolean("Mace", true, weapons)
+
+    private val targets = parent("Targets only")
+    private val targetsOnly by boolean("Enabled", true, targets)
+    private val players by boolean("Players", true, targets) { targetsOnly }
+    private val hostile by boolean("Hostile", true, targets) { targetsOnly }
+    private val neutral by boolean("Neutral", true, targets) { targetsOnly }
+    private val filterAngry by boolean("Filter angry mobs", true, targets) { targetsOnly && neutral }
+    private val passive by boolean("Passive", true, targets) { targetsOnly }
+
+    private val weapons = parent("Weapons only")
+    private val weaponsOnly by boolean("Enabled", true, weapons)
+    private val axe by boolean("Axe", true, weapons) { weaponsOnly }
+    private val sword by boolean("Sword", true, weapons) { weaponsOnly }
+    private val mace by boolean("Mace", true, weapons) { weaponsOnly }
+
+    private val filter
+        get() = TargetFilter(players, hostile, neutral, filterAngry, passive)
 
     @Subscribe
     @Suppress("unused")
     fun onInputEvent(@Suppress("unused") unused: InputHandleEvent) {
-        if (mc.crosshairTarget == null || mc.crosshairTarget !is EntityHitResult || mc.currentScreen != null)
+        if (mc.crosshairTarget == null || mc.crosshairTarget !is EntityHitResult || (mc.crosshairTarget as EntityHitResult).entity !is LivingEntity || mc.currentScreen != null)
             return
+        if (targetsOnly && !filter.isValidTarget((mc.crosshairTarget as EntityHitResult).entity as LivingEntity)) {
+            return
+        }
         if (holdOnly && !mc.options.attackKey.isHeld())
             return
         if (mc.interactionManager!!.isBreakingBlock)

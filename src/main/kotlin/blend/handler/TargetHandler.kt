@@ -21,10 +21,10 @@ object TargetHandler: Handler {
             when(entity) {
                 is PlayerEntity -> filter.players
                 is Angerable, is PiglinEntity -> { // positioned above since PiglinEntity is of type HostileEntity
-                    if (filter.filterNeutral) {
+                    filter.neutral && if (filter.filterNeutral) {
                         (entity as MobEntity).isAttacking
                     } else {
-                        filter.neutral
+                        true
                     }
                 }
                 is PassiveEntity -> filter.passive
@@ -62,7 +62,23 @@ data class TargetFilter(
     val neutral: Boolean,
     val filterNeutral: Boolean,
     val passive: Boolean
-)
+) {
+    fun isValidTarget(target: LivingEntity): Boolean {
+        return when(target) {
+            is Angerable, is PiglinEntity -> {
+                neutral && if (filterNeutral) {
+                    (target as MobEntity).isAttacking
+                } else {
+                    true
+                }
+            }
+            is PlayerEntity -> players
+            is PassiveEntity -> passive
+            is HostileEntity -> hostile
+            else -> false
+        }
+    }
+}
 
 enum class TargetPriority {
     DISTANCE,
