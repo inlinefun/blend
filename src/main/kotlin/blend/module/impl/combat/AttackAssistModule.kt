@@ -50,7 +50,7 @@ object AttackAssistModule: AbstractModule(
         }
         if (holdOnly && !mc.options.attackKey.isHeld())
             return
-        if (mc.interactionManager!!.isBreakingBlock)
+        if (interactions.isBreakingBlock)
             return
         if (weaponsOnly) {
             val item = player.mainHandStack.item ?: return
