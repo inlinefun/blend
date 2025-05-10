@@ -11,7 +11,7 @@ import net.minecraft.item.SwordItem
 import net.minecraft.util.hit.EntityHitResult
 import org.greenrobot.eventbus.Subscribe
 
-object AttackAssist: AbstractModule(
+object AttackAssistModule: AbstractModule(
     names = arrayOf("Attack Assist", "Trigger Bot"),
     description = "Helps you attack at of the item cooldown.",
     category = ModuleCategory.COMBAT
@@ -27,14 +27,6 @@ object AttackAssist: AbstractModule(
     private val axe by boolean("Axe", true, weapons)
     private val sword by boolean("Sword", true, weapons)
     private val mace by boolean("Mace", true, weapons)
-
-    override fun onEnable() {
-
-    }
-
-    override fun onDisable() {
-
-    }
 
     @Subscribe
     @Suppress("unused")
