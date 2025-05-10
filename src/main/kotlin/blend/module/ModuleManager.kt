@@ -1,5 +1,6 @@
 package blend.module
 
+import blend.module.impl.combat.AimAssistModule
 import blend.module.impl.combat.AttackAssistModule
 import blend.module.impl.movement.SprintModule
 import blend.module.impl.other.TestModule
@@ -19,7 +20,8 @@ object ModuleManager: Initializable {
             ClientThemeModule,
             ClickGUIModule,
             TestModule,
-            AttackAssistModule
+            AttackAssistModule,
+            AimAssistModule
         ).sortedBy {
             it.name
         }.also { modules ->
