@@ -4,9 +4,9 @@ import blend.command.CommandManager
 import blend.config.ConfigManager
 import blend.handler.ChatInputHandler
 import blend.handler.KeybindHandler
+import blend.handler.TargetHandler
 import blend.module.ModuleManager
 import blend.util.extensions.mc
-import blend.util.render.DrawUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +40,8 @@ object Client {
 
         arrayOf(
             KeybindHandler,
-            ChatInputHandler
+            ChatInputHandler,
+            TargetHandler
         ).forEach { it.init() }
 
         launch(Dispatchers.IO) {
