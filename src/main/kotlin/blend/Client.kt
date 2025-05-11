@@ -6,7 +6,7 @@ import blend.handler.ChatInputHandler
 import blend.handler.KeybindHandler
 import blend.handler.TargetHandler
 import blend.module.ModuleManager
-import blend.util.extensions.mc
+import blend.util.interfaces.IAccessor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +20,7 @@ import java.io.File
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-object Client {
+object Client: IAccessor {
 
     const val NAME = "Blend"
     const val VERSION = "5.0"

@@ -7,11 +7,13 @@ import blend.module.ModuleCategory
 import blend.util.extensions.isHeld
 import blend.util.extensions.simulateAction
 import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.effect.StatusEffects
 import net.minecraft.item.AxeItem
 import net.minecraft.item.MaceItem
 import net.minecraft.item.SwordItem
 import net.minecraft.util.hit.EntityHitResult
 import org.greenrobot.eventbus.Subscribe
+import kotlin.math.ceil
 
 object AttackAssistModule: AbstractModule(
     names = arrayOf("Attack Assist", "Trigger Bot"),
@@ -21,7 +23,7 @@ object AttackAssistModule: AbstractModule(
 
     private val offset by double("Offset", 0.0, 0.0, 5.0, 0.25)
     private val holdOnly by boolean("Hold only", true)
-    private val crits by boolean("Smart crits", true) // not very smart :(
+    private val crits by boolean("Smart crits", true)
 
     private val targets = parent("Targets only")
     private val targetsOnly by boolean("Enabled", true, targets)
@@ -64,13 +66,28 @@ object AttackAssistModule: AbstractModule(
                 return
         }
         val isCooldownOver = player.getAttackCooldownProgress(offset.toFloat()) >= 1.0
-        val isFalling = !player.isOnGround && player.velocity.y <= 0.2
-        val isGroundedAttack = player.isOnGround
-        val canNotCrit = player.isInLava || player.isTouchingWater || player.isSprinting || !crits
-
-        if (isCooldownOver && (isGroundedAttack || (isFalling && !canNotCrit))) {
+        if (isCooldownOver && !shouldWaitForCrit()) {
             mc.options.attackKey.simulateAction(true)
         }
+    }
+
+    fun shouldWaitForCrit(): Boolean {
+        if (!crits) return false
+
+        if (mc.options.jumpKey.isHeld()) {
+            if (player.isClimbing || player.isTouchingWater || player.hasStatusEffect(StatusEffects.BLINDNESS) || player.hasVehicle()) {
+                return false
+            }
+            if (player.velocity.y < -0.08)
+                return false
+
+            val attackCooldownTicks = ceil(1.0 / player.attackCooldownProgressPerTick).toInt()
+            if (attackCooldownTicks <= 15) {
+                return true // Wait until crit conditions are met
+            }
+        }
+
+        return false // If not holding jump or no need to wait
     }
 
 }
