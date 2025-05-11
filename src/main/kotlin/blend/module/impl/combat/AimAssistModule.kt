@@ -23,6 +23,7 @@ object AimAssistModule: AbstractModule(
     category = ModuleCategory.COMBAT
 ) {
 
+    private val speed by double("Speed multiplier", 1.0, 0.5, 2.0, 0.1)
     private val range by double("Range", 3.3, 3.0, 4.5, 0.1)
     private val sort by list("Sorting", TargetPriority.all)
     private val holdOnly by boolean("Hold", true)
@@ -72,8 +73,8 @@ object AimAssistModule: AbstractModule(
             val pitchDiff = MathHelper.wrapDegrees(rotations.pitch - player.pitch)
             val sensitivity = mc.options.mouseSensitivity.value.toFloat() * 0.6f + 0.2f
             val factor = (sensitivity * sensitivity * sensitivity) * 8.0f
-            event.deltaX += yawDiff / factor
-            event.deltaY += pitchDiff / factor
+            event.deltaX += (yawDiff / factor) * speed
+            event.deltaY += (pitchDiff / factor) * speed
         }
     }
 
